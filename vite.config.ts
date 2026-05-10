@@ -3,8 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
-const port = Number(process.env.PORT) || 5173;
-const basePath = process.env.BASE_PATH || "/";
+const basePath = process.env.VITE_BASE_PATH || "/";
 
 export default defineConfig({
   base: basePath,
@@ -18,21 +17,13 @@ export default defineConfig({
     },
   },
 
-  root: path.resolve(import.meta.dirname),
-
   build: {
     outDir: "dist",           // ← Changed to standard "dist"
     emptyOutDir: true,
   },
 
   server: {
-    port,
-    strictPort: true,
-    host: "0.0.0.0",
-  },
-
-  preview: {
-    port,
+    port: Number(process.env.PORT) || 5173,
     host: "0.0.0.0",
   },
 });
