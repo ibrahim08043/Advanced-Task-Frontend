@@ -25,13 +25,17 @@ class WebSocketManager {
   private shouldConnect = false;
 
   private getUrl(): string {
-    const isDev = import.meta.env.DEV;
-    if (isDev) {
-      // Connect to backend port in development
-      return `${WS_BASE_URL}/ws`;
+    // Always prefer environment variable (VITE_WS_URL)
+    const wsBase = import.meta.env.VITE_WS_URL;
+    console.log(wsBase, "wsBase")
+    if (wsBase) {
+      console.log(`[WebSocket] Connecting to: ${wsBase}/ws`);
+      return `${wsBase}/ws`;
     }
 
-    // Production: same origin as frontend
+    // Fallback only if env variable is missing (for safety)
+    console.warn("[WebSocket] VITE_WS_URL is not set! Using same origin fallback.");
+
     const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
     return `${proto}//${window.location.host}/ws`;
   }

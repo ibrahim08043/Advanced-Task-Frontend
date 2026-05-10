@@ -1,38 +1,32 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
-const port = Number(process.env.PORT) || 5173;
-const basePath = process.env.BASE_PATH || "/";
+export default defineConfig(({ mode }) => {
+  // Load env variables properly
+  const env = loadEnv(mode, process.cwd(), "");
 
-export default defineConfig({
-  base: basePath,
+  return {
+    base: env.VITE_BASE_PATH || "/",
 
-  plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss()],
 
-  resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "src"),
-      "@assets": path.resolve(import.meta.dirname, "..", "..", "attached_assets"),
+    resolve: {
+      alias: {
+        "@": path.resolve(import.meta.dirname, "src"),
+        "@assets": path.resolve(import.meta.dirname, "..", "..", "attached_assets"),
+      },
     },
-  },
 
-  root: path.resolve(import.meta.dirname),
+    build: {
+      outDir: "dist",
+      emptyOutDir: true,
+    },
 
-  build: {
-    outDir: "dist",           // ← Changed to standard "dist"
-    emptyOutDir: true,
-  },
-
-  server: {
-    port,
-    strictPort: true,
-    host: "0.0.0.0",
-  },
-
-  preview: {
-    port,
-    host: "0.0.0.0",
-  },
+    server: {
+      port: Number(env.VITE_PORT) || 5001,
+      host: "0.0.0.0",
+    },
+  };
 });
