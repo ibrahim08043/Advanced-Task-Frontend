@@ -27,17 +27,17 @@ class WebSocketManager {
   private getUrl(): string {
     // Always prefer environment variable (VITE_WS_URL)
     const wsBase = import.meta.env.VITE_WS_URL;
-    console.log(wsBase, "wsBase")
+    console.log(wsBase, "wsBase");
+
     if (wsBase) {
       console.log(`[WebSocket] Connecting to: ${wsBase}/ws`);
       return `${wsBase}/ws`;
     }
 
-    // Fallback only if env variable is missing (for safety)
-    console.warn("[WebSocket] VITE_WS_URL is not set! Using same origin fallback.");
+    // Fallback only if env variable is missing
+    console.warn("[WebSocket] VITE_WS_URL is not set!");
 
-    const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
-    return `${proto}//${window.location.host}/ws`;
+    return `${window.location.host}/ws`;
   }
 
   connect(): void {
